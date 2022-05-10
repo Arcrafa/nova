@@ -1,0 +1,3 @@
+/work1/nova/rafaelma #para el codigo 
+
+/nashome/r/rafaelma # home donde va el .bash_profile

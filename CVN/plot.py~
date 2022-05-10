@@ -1,0 +1,83 @@
+import h5py
+import numpy as np
+import matplotlib.pyplot as plt
+
+f = h5py.File('logs/predictions_default.h5','r')
+
+pdgs = f['labels'][:]
+probs = f['probs'][:,0]
+
+labs = np.zeros_like(pdgs)
+labs[pdgs==-12] = 0
+labs[pdgs== 12] = 1
+labs[pdgs==-14] = 2
+labs[pdgs== 14] = 3
+
+####################################################
+# Sample composition
+plt.hist(labs, bins=4, range=(0,4), histtype='step')
+
+plt.gca().set_xticks([0.5,1.5,2.5,3.5,4.5])
+plt.gca().set_xticklabels(['NueBar','Nue','NumuBar','Numu'], ha='center')
+
+plt.savefig('plots/sample.pdf')
+plt.close() 
+
+####################################################
+# plt scores for all nus and anti-nus
+plt.hist([ probs[pdgs>0],probs[pdgs<0] ], bins=100, range=(0,1), 
+         histtype='step', color=['blue', 'red'], label=['nu','anti-nu'])
+
+plt.legend(loc='upper center')
+plt.xlabel('+ score')
+
+plt.savefig('plots/fullscores.png')
+plt.close()
+
+####################################################
+# plt scores for all nues
+plt.hist([ probs[pdgs==12],probs[pdgs==-12] ], bins=100, range=(0,1), 
+         histtype='step', color=['blue', 'red'], label=['nue','nuebar'])
+
+plt.legend(loc='upper center')
+plt.xlabel('+ score')
+
+plt.savefig('plots/nuescores.png')
+plt.close()
+
+####################################################
+# plt scores for all numus
+plt.hist([ probs[pdgs==14],probs[pdgs==-14] ], bins=100, range=(0,1), 
+         histtype='step', color=['blue', 'red'], label=['numu','numubar'])
+
+plt.legend(loc='upper center')
+plt.xlabel('+ score')
+
+plt.savefig('plots/numuscores.png')
+plt.close()
+
+####################################################
+# ROC Curve
+from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_auc_score
+
+totbkgeff, totsigeff, _   = roc_curve(pdgs>0,                   probs)
+nuebkgeff, nuesigeff, _   = roc_curve(pdgs[np.abs(pdgs)==12]>0, probs[np.abs(pdgs)==12])
+numubkgeff, numusigeff, _ = roc_curve(pdgs[np.abs(pdgs)==14]>0, probs[np.abs(pdgs)==14])
+
+tot_auc  = roc_auc_score(pdgs>0,                   probs)
+nue_auc  = roc_auc_score(pdgs[np.abs(pdgs)==12]>0, probs[np.abs(pdgs)==12])
+numu_auc = roc_auc_score(pdgs[np.abs(pdgs)==14]>0, probs[np.abs(pdgs)==14])
+
+plt.plot(totbkgeff, totsigeff,   label='Full (area = %0.3f)' % tot_auc)
+plt.plot(nuebkgeff, nuesigeff,   label='Nue (area = %0.3f)' % nue_auc)
+plt.plot(numubkgeff, numusigeff, label='Numu (area = %0.3f)' % numu_auc)
+plt.plot([0, 1], [0, 1], 'k--')  # random predictions curve
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.0])
+plt.xlabel('Background Efficiency')
+plt.ylabel('Signal Efficiency')
+plt.legend(loc="lower right")
+
+plt.savefig('plots/roc.png')
+plt.close()

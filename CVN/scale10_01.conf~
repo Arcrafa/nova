@@ -1,0 +1,36 @@
+# used for naming everything
+name = scale10_00
+
+# number of samples in each iteration
+batch_size = 64
+# fraction of events to put in the testing sample
+test_size = 0.1
+# number of batches to process in each epoch
+train_iterations = 4000
+eval_iterations = 400
+
+# Files used for training
+dataset = /wclustre/novapro/R19-11-18-Prod5/mbaird42-trimmed-H5s-for-CVN-training/FD_nominal/
+# Fraction of cosmics in the sample
+cosmic_fraction = 0.1
+# Random scaling factor for inputs
+scale_dev = 0.05
+
+# Optimizer parameters
+learning_rate = 0.05
+momentum = 0.9
+nesterov = true
+
+# Training parameters
+learning_rate_factor = 0.5
+learning_rate_patience = 5
+early_stopping_patience = 15
+checkpoint_period = 20000
+
+# For interacting with training files
+num_classes = 4
+map_location = cvnmap
+lab_location = label
+
+# where to store the output
+out_directory = logs/

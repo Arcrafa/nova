@@ -1,0 +1,7 @@
+#1 vector relativista o de lorents
+#grafica probabilidad vs p.pz
+#graficas de probabilidad vs energia (P.E)
+#graficas de probabilidad vs nhitslc
+#histogramas de probabilidad
+
+#filtros

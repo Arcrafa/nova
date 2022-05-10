@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="25f7ae7b-c112-4fcf-9a02-f59ddcfbeb26" name="rafaelma@wc.fnal.gov:22 key">
+        <fileTransfer rootFolder="/work1/nova/rafaelma" accessType="SFTP" host="wc.fnal.gov" port="22" sshConfigId="62d73b95-efd3-40d4-b40f-cf5f0a0b154c" sshConfig="rafaelma@wc.fnal.gov:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions keepAliveTimeout="0" isUseRsync="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

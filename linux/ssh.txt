@@ -1,0 +1,5 @@
+/etc/ssh/ssh_config  #configuracion de ssh
+
+ssh key config https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-on-ubuntu-20-04
+	
+scp -r user@your.server.example.com:/path/to/foo /home/user/Desktop/
