@@ -5,7 +5,7 @@ from utils.dataset import dataset
 from utils.parser import parse
 import numpy as np
 import time
-
+import utils.generator as gen
 
 from random import sample
 #################################################################################
@@ -22,7 +22,7 @@ print('cargando el dataset')
 data = dataset(config, files, run_info=False)
 train, test = data.split()
 
-
+del data
 
 from utils.model import model
 print('creando el modelo')
@@ -33,6 +33,8 @@ kModel = model(config)
 print('entrenamiento inicial')
 kModel.train(train, test)
 
+del train
+kModel=model(config,model_file='./logs/weights_default_best.h5')
 
 probs = []
 labels = []
@@ -41,12 +43,12 @@ vtx_stop=[]
 pms=[]
 t0 = time.time()
 
-for n, prop in enumerate(test.props):
+for n,i in enumerate(test.ids):
     if n % 50 == 0:
         print(str(n) + ' events processed in ' + str(time.time() - t0))
 
-    #prop = data.load_prop(i)
-    pm = data.load_pm(n)
+    prop = data.load_prop(i)
+    pm = data.load_pm(i)
     pms.append(pm)
     pm = pm.reshape((2, 100, 80, 1))
     pm = np.concatenate((pm[0].reshape((100, 80)), pm[1].reshape((100, 80))), axis=1)
@@ -56,10 +58,10 @@ for n, prop in enumerate(test.props):
     probs.append(p)
 
     labels.append(np.array(prop['label']).astype(int))
-    mc_cosmics.append(data.load_mc_cosmic(n))
-    vtx_stop.append(data.load_vtx_stop(n))
+    mc_cosmics.append(data.load_mc_cosmic(i))
+    vtx_stop.append(data.load_vtx_stop(i))
 
-data = {'muon': labels.count(13), 'electron': labels.count(11), 'piminus': labels.count(-211)}
+data = {'muon': labels.count(0), 'electron': labels.count(1), 'piminus': labels.count(2)}
 print(data)
 
 # Save in a file for later plotting

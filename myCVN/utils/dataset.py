@@ -35,7 +35,7 @@ class dataset():
             # store the file location and index within file for each
             for n, (lab, run, subrun, cyc, evt, vtx_x, vtx_y, vtx_z, stop_x, stop_y, stop_z) in enumerate(
                     zip(labs, runs, subruns, cycs, evts, vtxs_x, vtxs_y, vtxs_z, stops_x, stops_y, stops_z)):
-                #if n>=200: break
+
 
                 if stop_x < -180: continue
                 if stop_x > 180: continue
@@ -76,9 +76,9 @@ class dataset():
     # split into two datasets of size frac and 1-frac
     def split(self, frac=0.2):
         print('Splitting into ' + str(1 - frac) + ' train and ' + str(frac) + ' eval...')
-        muones=list(filter(lambda x: x['label']==13, self.props))
-        electrones = random.sample(list(filter(lambda x: x['label'] == 11, self.props)), len(muones))
-        piones = random.sample(list(filter(lambda x: x['label'] == -211, self.props)), len(electrones))
+        muones=list(filter(lambda x: x['label']==0, self.props))
+        electrones = random.sample(list(filter(lambda x: x['label'] == 1, self.props)), len(muones))
+        piones = random.sample(list(filter(lambda x: x['label'] == 2, self.props)), len(electrones))
 
         self.props=[]
 

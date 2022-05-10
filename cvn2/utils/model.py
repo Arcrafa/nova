@@ -12,7 +12,7 @@ import utils.architecture as ac
 import utils.generator as gen
 
 class model():
-    def __init__(self, config):
+    def __init__(self, config,model_file=None):
         self._config = config
         self.keras_model = ac.architecture(config)
 
@@ -20,7 +20,8 @@ class model():
             self.load_weights(self._config.model_file)
         else:
             self.epoch = 0
-
+        if (model_file is not None):
+            self.load_weights(model_file)
     # Load weights from a file
     def load_weights(self, path):
         print('Loading model weights from '+path+'...')
@@ -39,10 +40,10 @@ class model():
         eval_gen  = gen.generator(self._config, eval_data, augment=False)
 
         train_dataset = tf.data.Dataset.from_generator(train_gen, output_types=(tf.float32, tf.int32),
-                        output_shapes=(tf.TensorShape([16000]),
+                        output_shapes=(tf.TensorShape([100, 160, 3]),
                         tf.TensorShape([self._config.num_classes]))).batch(self._config.batch_size)
         eval_dataset = tf.data.Dataset.from_generator(eval_gen, output_types=(tf.float32, tf.int32),
-                        output_shapes=(tf.TensorShape([16000]),
+                        output_shapes=(tf.TensorShape([100, 160, 3]),
                         tf.TensorShape([self._config.num_classes]))).batch(self._config.batch_size)
 
         opt = SGD(lr=self._config.learning_rate, momentum=self._config.momentum, 
@@ -68,7 +69,7 @@ class model():
                              steps_per_epoch=self._config.train_iterations,
                              validation_data=eval_dataset,
                              validation_steps=self._config.eval_iterations,
-                             epochs=1000,
+                             epochs=self._config.epochs,
                              callbacks=callbacks,
                              verbose=2,
                              workers=2,

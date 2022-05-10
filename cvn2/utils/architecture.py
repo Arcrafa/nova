@@ -8,7 +8,7 @@ def architecture(config):
     model = EfficientNetB0(include_top=False, input_tensor=inputs, weights="imagenet")
 
     # Freeze the pretrained weights
-    model.trainable = True
+    model.trainable  =True
 
     # Rebuild top
     x = layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
