@@ -1,13 +1,14 @@
 import os
+import time
 import h5py
+
 
 from utils.dataset import dataset
 from utils.parser import parse
-import numpy as np
-import time
-import utils.generator as gen
-
 from random import sample
+import numpy as np
+
+# import matplotlib.pyplot as plt
 #################################################################################
 
 # Setup this trial's config
@@ -18,23 +19,13 @@ electron = [os.path.join(config.dataset,'ND-Single-Electron',f) for f in os.list
 muon = [os.path.join(config.dataset,'ND-Single-Muon',f) for f in os.listdir(os.path.join(config.dataset,'ND-Single-Muon'))]
 piminus = [os.path.join(config.dataset,'ND-Single-PiMinus',f) for f in os.listdir(os.path.join(config.dataset,'ND-Single-PiMinus'))]
 files = electron+muon+piminus
-print('cargando el dataset')
-data = dataset(config, files, run_info=False)
-train, test = data.split()
 
-del data
+data = dataset(config, files, run_info=False)
+train, test = data.split(frac=0.8)
 
 from utils.model import model
-print('creando el modelo')
 # Initialize the model
 kModel = model(config)
-
-# GO GO GO
-print('entrenamiento inicial')
-kModel.train(train, test)
-
-del train
-kModel=model(config,model_file='./logs/weights_default_best.h5')
 
 probs = []
 labels = []
@@ -43,8 +34,8 @@ vtx_stop=[]
 pms=[]
 t0 = time.time()
 
-for n,i in enumerate(test.ids):
-    if n % 200 == 0:
+for n, i in enumerate(test.ids):
+    if n % 50 == 0:
         print(str(n) + ' events processed in ' + str(time.time() - t0))
 
     prop = test.load_prop(i)
@@ -72,5 +63,3 @@ hf.create_dataset('rec.mc.cosmic', data=mc_cosmics, compression='gzip')
 hf.create_dataset('vtx_stop', data=vtx_stop, compression='gzip')
 hf.create_dataset('pm', data=pms, compression='gzip')
 hf.close()
-
-

@@ -99,7 +99,7 @@ class dataset():
         np.random.shuffle(self.ids)
 
     # split into two datasets of size frac and 1-frac
-    def split(self, frac=0.1):
+    def split(self, frac=0.2):
         print('Splitting into ' + str(1 - frac) + ' train and ' + str(frac) + ' eval...')
         muones = list(filter(lambda x: x['label'] == 0, self._props))
         electrones = random.sample(list(filter(lambda x: x['label'] == 1, self._props)), len(muones))

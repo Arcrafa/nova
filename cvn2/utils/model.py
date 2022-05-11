@@ -7,6 +7,7 @@ from keras.optimizers import SGD
 from keras import backend as K
 from tensorflow.python.framework import graph_util
 import tensorflow as tf
+import pandas as pd
 
 import utils.architecture as ac
 import utils.generator as gen
@@ -65,7 +66,7 @@ class model():
                                                    restore_best_weights=True)]
 
         # GO GO GO
-        self.keras_model.fit(x=train_dataset,
+        history=self.keras_model.fit(x=train_dataset,
                              steps_per_epoch=self._config.train_iterations,
                              validation_data=eval_dataset,
                              validation_steps=self._config.eval_iterations,
@@ -79,6 +80,14 @@ class model():
 
         self.keras_model.save(os.path.join(self._config.out_directory,
                                            'weights_'+self._config.name+'_best.h5'))
+
+        # convert the history.history dict to a pandas DataFrame:
+        hist_df = pd.DataFrame(history.history)
+
+        # save to json:
+        hist_json_file = self._config.name+'history.json'
+        with open(hist_json_file, mode='w') as f:
+            hist_df.to_json(f)
 
     def predict(self, pm):
         p = self.keras_model.predict(np.array([pm]))
