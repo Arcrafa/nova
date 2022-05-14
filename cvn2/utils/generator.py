@@ -1,6 +1,7 @@
 import numpy as np
 from keras.utils import to_categorical
 
+
 def generator(config, dataset, augment=False):
     def raw_gen():
         this = dataset
@@ -20,8 +21,8 @@ def generator(config, dataset, augment=False):
 
                 # Augmentation
                 if aug:
-                    pm = pm*np.random.normal(1, scale_dev)
-                
+                    pm = pm * np.random.normal(1, scale_dev)
+
                 yield pm, to_categorical(lab, num_classes=num_classes)
 
     return raw_gen
