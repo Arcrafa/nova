@@ -21,7 +21,7 @@ piminus = [os.path.join(config.dataset,'ND-Single-PiMinus',f) for f in os.listdi
 files = electron+muon+piminus
 
 data = dataset(config, files, run_info=False)
-train, test = data.split(frac=0.8)
+train, test = data.split()
 
 from utils.model import model
 # Initialize the model
@@ -41,9 +41,7 @@ for n, i in enumerate(test.ids):
     prop = test.load_prop(i)
     pm = test.load_pm(i)
     pms.append(pm)
-    pm = pm.reshape((2, 100, 80, 1))
-    pm = np.concatenate((pm[0].reshape((100, 80)), pm[1].reshape((100, 80))), axis=1)
-    pm = np.stack((pm,) * 3, axis=-1)
+
     p = kModel.predict(pm)
 
     probs.append(p)

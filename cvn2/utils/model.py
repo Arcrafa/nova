@@ -41,10 +41,10 @@ class model():
         eval_gen  = gen.generator(self._config, eval_data, augment=False)
 
         train_dataset = tf.data.Dataset.from_generator(train_gen, output_types=(tf.float32, tf.int32),
-                        output_shapes=(tf.TensorShape([100, 160, 3]),
+                        output_shapes=(tf.TensorShape([16000]),
                         tf.TensorShape([self._config.num_classes]))).batch(self._config.batch_size)
         eval_dataset = tf.data.Dataset.from_generator(eval_gen, output_types=(tf.float32, tf.int32),
-                        output_shapes=(tf.TensorShape([100, 160, 3]),
+                        output_shapes=(tf.TensorShape([16000]),
                         tf.TensorShape([self._config.num_classes]))).batch(self._config.batch_size)
 
         opt = SGD(lr=self._config.learning_rate, momentum=self._config.momentum, 
@@ -78,8 +78,8 @@ class model():
                              use_multiprocessing=True,
                              initial_epoch=self.epoch)
 
-        self.keras_model.save(os.path.join(self._config.out_directory,
-                                           'weights_'+self._config.name+'_best.h5'))
+        #self.keras_model.save(os.path.join(self._config.out_directory,
+        #                                   'weights_'+self._config.name+'_best.h5'))
 
         # convert the history.history dict to a pandas DataFrame:
         hist_df = pd.DataFrame(history.history)

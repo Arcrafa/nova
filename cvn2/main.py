@@ -9,7 +9,7 @@ import utils.generator as gen
 
 from random import sample
 #################################################################################
-
+ti = time.time()
 # Setup this trial's config
 config = parse()
 
@@ -44,15 +44,13 @@ pms=[]
 t0 = time.time()
 
 for n,i in enumerate(test.ids):
-    if n % 200 == 0:
+    if n % 1000 == 0:
         print(str(n) + ' events processed in ' + str(time.time() - t0))
 
     prop = test.load_prop(i)
     pm = test.load_pm(i)
     pms.append(pm)
-    pm = pm.reshape((2, 100, 80, 1))
-    pm = np.concatenate((pm[0].reshape((100, 80)), pm[1].reshape((100, 80))), axis=1)
-    pm = np.stack((pm,) * 3, axis=-1)
+
     p = kModel.predict(pm)
 
     probs.append(p)
@@ -73,4 +71,4 @@ hf.create_dataset('vtx_stop', data=vtx_stop, compression='gzip')
 hf.create_dataset('pm', data=pms, compression='gzip')
 hf.close()
 
-
+print('tiempo total' + str((time.time() - ti)/60))
