@@ -4,13 +4,13 @@
 #SBATCH --job-name=rafa_cvn_conda_predict
 #SBATCH --gres=gpu:2
 #SBATCH --partition gpu_gce
-#SBATCH --nodelist=wcgpu02,wcgpu03
+#SBATCH --nodelist=wcgpu05
 #SBATCH --time=05:00:00
 
 module load condaforge/py39
 module load cuda11
 conda activate /work1/nova/grohmc/conda/envs/nascvn/
 
-cd /work1/nova/rafaelma/cvn2
+cd /work1/nova/rafaelma/myCVN
 
-python predict.py -c default.conf --model_file ./logs/weights_default_plus_049.h5
+python contar.py -c default.conf

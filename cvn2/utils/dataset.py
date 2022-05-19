@@ -10,12 +10,14 @@ class dataset():
     def __init__(self, config, files=None, run_info=False):
         self._config = config
         self._props = []
-
+        count=0
         print('cargando archivos')
         # Loop over each file and count the number of pixel maps present
         for f in files or [0]:
             if f == 0:
                 break
+            count+=1
+            print(count,'/',len(files),' archivos')
 
             h5 = h5py.File(f, 'r')
             labs = h5['rec.mc.cosmic']['pdg']
