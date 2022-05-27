@@ -13,9 +13,10 @@ import numpy as np
 # Setup this trial's config
 config = parse()
 
-files = ['/wclustre/nova/users/rafaelma/dataset_test.h5']
-
-test = dataset(config, files)
+# Generate a list of files to use for training
+files = [os.path.join(config.dataset,f) for f in os.listdir(config.dataset)]
+data = dataset(config, files, run_info=True)
+train, test = data.split()
 
 
 from utils.model import model
@@ -31,6 +32,7 @@ sls = []
 
 probs = []
 labels = []
+
 
 t0 = time.time()
 
@@ -55,6 +57,7 @@ for n, i in enumerate(test.ids):
 
 # Save in a file for later plotting
 hf = h5py.File(os.path.join(config.out_directory, 'predictions_' + config.name + '.h5'), 'w')
+
 hf.create_dataset('runs', data=runs, compression='gzip')
 hf.create_dataset('subruns', data=subruns, compression='gzip')
 hf.create_dataset('cycles', data=cycles, compression='gzip')

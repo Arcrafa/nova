@@ -11,12 +11,12 @@ from PandAna import *
 #################################################################################
 ti = time.time()
 # Setup this trial's config
-
-
+#ruta='./wclustre/novapro/R19-11-18-Prod5_fullset/'
+ruta='./data/'
 # Generate a list of files to use for training
-electron = [os.path.join('/wclustre/novapro/R19-11-18-Prod5_fullset/','ND-Single-Electron',f) for f in os.listdir(os.path.join('/wclustre/novapro/R19-11-18-Prod5_fullset/','ND-Single-Electron'))]
-muon = [os.path.join('/wclustre/novapro/R19-11-18-Prod5_fullset/','ND-Single-Muon',f) for f in os.listdir(os.path.join('/wclustre/novapro/R19-11-18-Prod5_fullset/','ND-Single-Muon'))]
-piminus = [os.path.join('/wclustre/novapro/R19-11-18-Prod5_fullset/','ND-Single-PiMinus',f) for f in os.listdir(os.path.join('/wclustre/novapro/R19-11-18-Prod5_fullset/','ND-Single-PiMinus'))]
+electron = [os.path.join(ruta,'ND-Single-Electron',f) for f in os.listdir(os.path.join(ruta,'ND-Single-Electron'))]
+muon = [os.path.join(ruta,'ND-Single-Muon',f) for f in os.listdir(os.path.join(ruta,'ND-Single-Muon'))]
+piminus = [os.path.join(ruta,'ND-Single-PiMinus',f) for f in os.listdir(os.path.join(ruta,'ND-Single-PiMinus'))]
 files = electron + muon + piminus
 
 tables = loader(files)
@@ -74,5 +74,5 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(df.drop(['pdg'], axis=1), df['pdg'], test_size=0.10, random_state=42)
 df_train=pd.concat([X_train,y_train], axis=1, join='inner').reset_index()
 df_test=pd.concat([X_test,y_test], axis=1, join='inner').reset_index()
-save(df_train,'./wclustre/nova/users/rafaelma/dataset.h5')
-save(df_test,'./wclustre/nova/users/rafaelma/dataset_test.h5')
+save(df_train,ruta+'dataset.h5')
+save(df_test,ruta+'dataset_test.h5')

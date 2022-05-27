@@ -13,9 +13,14 @@ ti = time.time()
 # Setup this trial's config
 config = parse()
 
-test = dataset(config, ['/wclustre/nova/users/rafaelma/dataset_test.h5'],run_info=True)
-train = dataset(config, ['/wclustre/nova/users/rafaelma/dataset.h5'])
 
+# Setup this trial's config
+config = parse()
+
+# Generate a list of files to use for training
+files = [os.path.join(config.dataset,f) for f in os.listdir(config.dataset)]
+data = dataset(config, files, run_info=True)
+train, test = data.split()
 from utils.model import model
 print('creando el modelo')
 # Initialize the model
@@ -38,6 +43,7 @@ sls = []
 probs = []
 labels = []
 
+
 t0 = time.time()
 
 for n, i in enumerate(test.ids):
@@ -50,15 +56,14 @@ for n, i in enumerate(test.ids):
     subruns.append(prop['subrun'])
     cycles.append(prop['cyc'])
     evts.append(prop['evt'])
-
-
+    labels.append(prop['label'])
     pm = test.load_pm(i)
     pm = pm.reshape((2, 100, 80, 1))
     pm = np.concatenate((pm[0].reshape((100, 80)), pm[1].reshape((100, 80))), axis=1)
     pm = np.stack((pm,) * 3, axis=-1)
     p = kModel.predict(pm)
     probs.append(p)
-    labels.append(prop['label'])
+
 
 # Save in a file for later plotting
 hf = h5py.File(os.path.join(config.out_directory, 'predictions_' + config.name + '.h5'), 'w')

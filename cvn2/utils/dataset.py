@@ -32,7 +32,7 @@ class dataset():
                     self._props.append({'file': f, 'idx': n, 'label': lab,
                                         'run': run, 'subrun': subrun, 'cyc': cyc, 'evt': evt})
                 else:
-                    self._props.append({'idx': n, 'label': lab})
+                    self._props.append({'file': f, 'idx': n, 'label': lab})
 
             h5.close()
         else:
